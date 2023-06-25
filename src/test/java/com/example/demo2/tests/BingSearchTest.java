@@ -1,5 +1,7 @@
-package com.example.demo2;
+package com.example.demo2.tests;
 
+import com.example.demo2.pages.MainPage;
+import com.example.demo2.pages.ResultsPage;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +18,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainPageTest {
+public class BingSearchTest {
     private WebDriver driver;
 
     @BeforeEach
@@ -37,13 +39,13 @@ public class MainPageTest {
     }
 
     @Test
-    @RepeatedTest(3)
     @DisplayName("Проверка результатов поиска")
-    public void checkLinkTest() {
+    public void searchResultTest() {
         String input = "Selenium";
-        WebElement searchField = driver.findElement(By.cssSelector("#sb_form_q"));
-        searchField.sendKeys(input);
-        searchField.submit();
+
+        MainPage mp = new MainPage(driver);
+
+        mp.sendText(input);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(6));
         wait.until(ExpectedConditions.and(
@@ -51,16 +53,23 @@ public class MainPageTest {
                 ExpectedConditions.elementToBeClickable(By.cssSelector("h2 > a[href]"))
         ));
 
-        List<WebElement> results = driver.findElements(By.cssSelector("h2 > a[href]"));
-        clickElement(results, 0);
+        ResultsPage rp = new ResultsPage(driver);
+
+        rp.clickElement(driver, 0);
+
         assertEquals( "https://www.selenium.dev/", driver.getCurrentUrl(), "Ссылки не равны");
     }
 
-    public void clickElement(List<WebElement> results, int num) {
-        results.get(num).click();
-        System.out.println("Произведено нажатие по результату поиска номер " + (num + 1));
-        ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
-        driver.switchTo().window(tabs.get(1));
+    @Test
+    @DisplayName("Проверка строки поиска")
+    public void searchFieldTest() {
+        String input = "Selenium";
+
+        MainPage mp = new MainPage(driver);
+        mp.sendText(input);
+
+        ResultsPage rp = new ResultsPage(driver);
+        assertEquals(input, rp.getTextFromSearchField(), "Текст не совпал");
     }
 
 }
