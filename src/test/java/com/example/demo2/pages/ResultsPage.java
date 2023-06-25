@@ -10,13 +10,14 @@ import java.util.List;
 
 public class ResultsPage {
 
+    WebDriver driver;
     @FindBy(css = "#sb_form_q")
     private WebElement searchField;
 
     @FindBy(css = "h2 > a[href]")
     private List <WebElement> results;
 
-    public void clickElement(WebDriver driver ,int num) {
+    public void clickElement(int num) {
         results.get(num).click();
         System.out.println("Произведено нажатие по результату поиска номер " + (num + 1));
         ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
@@ -30,6 +31,7 @@ public class ResultsPage {
     }
 
     public ResultsPage(WebDriver driver) {
+        this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 

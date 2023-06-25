@@ -55,7 +55,7 @@ public class BingSearchTest {
 
         ResultsPage rp = new ResultsPage(driver);
 
-        rp.clickElement(driver, 0);
+        rp.clickElement(0);
 
         assertEquals( "https://www.selenium.dev/", driver.getCurrentUrl(), "Ссылки не равны");
     }
